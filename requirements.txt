@@ -1,0 +1,15 @@
+
+jupyterlab
+ipykernel
+pandas
+numpy
+scikit-learn
+matplotlib
+geopandas
+shapely
+pyproj
+streamlit
+fastapi
+uvicorn
+folium
+plotly
