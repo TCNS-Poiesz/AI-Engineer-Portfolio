@@ -38,19 +38,15 @@ def case1_page():
     locker_h = st.sidebar.slider("Locker height (H)", 0.2, 2.5, 1.5, 0.05)
 
     # ---------- Normalize parcel dataset ----------
-    # 1) Rename size columns to expected names
     if {"length_mm", "width_mm", "height_mm"}.issubset(df.columns):
-        df = df.rename(
-            columns={
-                "width_mm": "width",
-                "length_mm": "depth",
-                "height_mm": "height",
-            }
-        )
-        # Convert mm -> meters  ✅ inside this if
+        df = df.rename(columns={
+            "width_mm": "width",
+            "length_mm": "depth",
+            "height_mm": "height",
+        })
         df[["width", "depth", "height"]] = df[["width", "depth", "height"]] / 1000.0
 
-    # 2) If positions are missing, generate placeholder positions
+    # If positions are missing, generate placeholder positions
     if not {"x", "y", "z"}.issubset(df.columns):
         rng = np.random.default_rng(0)
         df["x"] = rng.uniform(0, locker_w, size=len(df))
@@ -64,8 +60,15 @@ def case1_page():
         st.error(f"Still missing required columns after normalization: {missing}")
         st.stop()
 
+    # 3) Clamp parcel dimensions so they never exceed locker bounds
+    df["width"]  = df["width"].clip(upper=locker_w)
+    df["depth"]  = df["depth"].clip(upper=locker_d)
+    df["height"] = df["height"].clip(upper=locker_h)
+
     # ---------- Baseline Matplotlib scatter ----------
     st.subheader("Baseline 3D scatter (parcel centers)")
+    st.caption("Each dot is a parcel center inside the locker volume. Axes scale with locker dimensions.")
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")
     ax.scatter(df["x"], df["y"], df["z"], s=10)
@@ -79,7 +82,9 @@ def case1_page():
 
     # ---------- Plotly 3D boxes ----------
     st.subheader("Plotly 3D boxes (parcels)")
+    st.caption("Transparent boxes represent parcel volumes. This view helps spot wasted space or collisions.")
     show_boxes = st.checkbox("Show parcels as 3D boxes", value=True)
+
     if show_boxes:
         fig3d = go.Figure()
 
@@ -105,7 +110,9 @@ def case1_page():
             height=650,
             margin=dict(l=0, r=0, t=30, b=0),
         )
+
         st.plotly_chart(fig3d, use_container_width=True)
+
 
 def case2_page():
     st.title("AI Case 2 – UD Incident Embeddings Analyzer")
