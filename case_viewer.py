@@ -66,12 +66,79 @@ def case1_page():
     df["width"] = df["width"].clip(upper=locker_w)
     df["depth"] = df["depth"].clip(upper=locker_d)
     df["height"] = df["height"].clip(upper=locker_h)
+    # ---------- Physical properties (demo, but data-aware) ----------
+    # In real logistics data, weight and stackability normally come from
+    # the carrier/shipper manifest. Here we:
+    # 1) Use existing columns if present.
+    # 2) Otherwise, derive demo values so the prototype remains usable.
+
+    # Volume in cubic meters (always safe to compute).
+    df["volume_m3"] = df["width"] * df["depth"] * df["height"]
+
+    if {"weight_kg", "max_top_load_kg"}.issubset(df.columns):
+        # Use provided logistics data
+        df["weight_kg"] = df["weight_kg"].astype(float)
+        df["max_top_load_kg"] = df["max_top_load_kg"].astype(float)
+    else:
+        # Demo fallback: approximate weight from volume using a fake density.
+        density = 250  # "kg per cubic meter" (illustrative only)
+        df["weight_kg"] = df["volume_m3"] * density
+
+        # Demo rule: parcel can carry 3x its own weight on top.
+        df["max_top_load_kg"] = 3.0 * df["weight_kg"]
 
     # ---------- Stackability flag (demo rule) ----------
     # Demo rule: a parcel is "stackable" if its height is at most 40% of the
     # current locker height. This is purely illustrative and can later be
     # replaced with ML or richer business rules.
     df["stackable"] = df["height"] <= 0.4 * locker_h
+    # ---------- Canonical parcel schema (v1.0) ----------
+    # These columns mirror how real logistics systems tend to represent parcels.
+    # If some fields are missing in the CSV, we create sensible defaults so
+    # the rest of the app can rely on a stable schema.
+
+    # Core geometry (already ensured earlier): width, depth, height, volume_m3
+    # Core physics: weight_kg, max_top_load_kg (from data or demo fallback)
+
+    # Stackability & fragility flags
+    df["stackable_flag"] = df["stackable"].astype(bool)
+
+    if "fragile_flag" not in df.columns:
+        # False = not fragile by default in this prototype
+        df["fragile_flag"] = False
+
+    # Orientation rules: "any", "upright_only", "flat_only", etc.
+    if "orientation" not in df.columns:
+        df["orientation"] = "any"
+
+    # Parcel ID: use provided ID if present, otherwise synthesize a simple one.
+    if "parcel_id" not in df.columns:
+        df["parcel_id"] = [f"PARCEL_{i:03d}" for i in range(len(df))]
+
+    # ---------- Summary metrics ----------
+    st.subheader("Parcel physics summary (demo)")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Parcels", len(df))
+    with col2:
+        st.metric("Avg weight (kg)", f"{df['weight_kg'].mean():.2f}")
+    with col3:
+        st.metric(
+            "Avg max top load (kg)",
+            f"{df['max_top_load_kg'].mean():.2f}"
+        )
+    # ---------- Parcel data model preview ----------
+    with st.expander("Show parcel data sample (schema v1.0)", expanded=False):
+        cols_to_show = [
+            "parcel_id",
+            "width", "depth", "height",
+            "volume_m3",
+            "weight_kg", "max_top_load_kg",
+            "stackable_flag", "fragile_flag", "orientation",
+        ]
+        # Only keep columns that actually exist (in case of future changes)
+        cols_to_show = [c for c in cols_to_show if c in df.columns]
+        st.dataframe(df[cols_to_show].head(10))
 
     # ---------- Baseline Matplotlib scatter ----------
     st.subheader("Baseline 3D scatter (parcel centers)")

@@ -114,3 +114,52 @@ The TCNS Unattended Delivery (UD) Case Viewer demonstrates how operational const
 - Integration value for hardware vendors (locks, telematics)  
 - Data valorization across the UD ecosystem  
 
+✨ Parcel Schema v1.0 (Logistics & Digital Twin Model)
+
+This schema defines how parcels are represented inside the TCNS UD Case Viewer.
+It mirrors real logistics data models used by carriers (DHL, UPS) and locker operators, while remaining flexible for simulation and AI applications.
+
+1. Geometry
+Field	Type	Description
+width	float (m)	Parcel width
+depth	float (m)	Parcel length
+height	float (m)	Parcel height
+volume_m3	float	Derived: width × depth × height
+2. Physics
+Field	Type	Description
+weight_kg	float	Parcel weight (real or demo fallback)
+max_top_load_kg	float	Max load parcel can tolerate on top (real or fallback rule)
+3. Stackability & Handling
+Field	Type	Description
+stackable_flag	bool	True if parcel can be placed under others
+fragile_flag	bool	True if parcel must not bear weight
+orientation	string	"any", "upright_only", "flat_only"
+4. Identification
+Field	Type	Description
+parcel_id	string	Provided or auto-generated unique parcel code
+5. Placement (simulation fields)
+
+(Used for visualization and later optimization)
+
+Field	Type	Description
+x, y, z	float	Coordinates of parcel origin inside locker
+Schema Purpose
+
+This schema is designed to support:
+
+Digital twin simulations
+
+3D optimization logic
+
+AI-assisted stacking rules
+
+Collision detection
+
+“Fit / No-Fit” evaluations
+
+Operational analytics
+
+Developer onboarding
+
+The schema will evolve as UD_V1.0 matures (e.g., adding service class, delivery type, thermal requirements).
+
