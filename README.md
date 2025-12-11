@@ -70,4 +70,47 @@ export default defineConfig([
     },
   },
 ])
-```
+
+
+# TCNS – AI Case Viewer
+
+## UD Vision & Roadmap
+
+The TCNS Unattended Delivery (UD) Case Viewer demonstrates how operational constraints, parcel-level data, and 3D visualization can be combined to build next-generation last-mile optimization tools. This roadmap outlines the evolution from simple spatial visualization to a full digital-twin environment.
+
+### 1. Operational Insights from DHL
+- Real locker constraints, access flows, and time pressure  
+- Variability in parcel dimensions and packaging  
+- Recurring inefficiencies in manual loading  
+
+### 2. Constraint-Based 3D Packing
+- Space-aware placement  
+- Collision detection  
+- Validation against locker interior geometry  
+
+### 3. Stackability, Fragility & Orientation Rules
+- Parcel properties (stackable, fragile, orientation-restricted)  
+- Rule-based or ML-informed validation during placement  
+- Visual color-coding of constraint violations  
+
+### 4. Vehicle Access Constraints
+- Side-door vs. back-door loading options  
+- Differences in reachable volume  
+- Operational impact on loading strategy  
+
+### 5. Lock Integration, Telemetry & ML
+- Integration with digital locks  
+- Access logs & real-time telemetry  
+- Predictive models for delivery outcomes and incident detection  
+
+### 6. Digital Twin Simulation
+- Virtual locker simulation for parcel placement  
+- User-adjustable parameters (locker size, parcel set, constraints)  
+- Playback of incident scenarios via embeddings  
+
+### 7. Business Value & Partner Integration
+- Efficiency gains for carriers  
+- Operational predictability for locker operators  
+- Integration value for hardware vendors (locks, telematics)  
+- Data valorization across the UD ecosystem  
+

@@ -39,11 +39,13 @@ def case1_page():
 
     # ---------- Normalize parcel dataset ----------
     if {"length_mm", "width_mm", "height_mm"}.issubset(df.columns):
-        df = df.rename(columns={
-            "width_mm": "width",
-            "length_mm": "depth",
-            "height_mm": "height",
-        })
+        df = df.rename(
+            columns={
+                "width_mm": "width",
+                "length_mm": "depth",
+                "height_mm": "height",
+            }
+        )
         df[["width", "depth", "height"]] = df[["width", "depth", "height"]] / 1000.0
 
     # If positions are missing, generate placeholder positions
@@ -60,10 +62,16 @@ def case1_page():
         st.error(f"Still missing required columns after normalization: {missing}")
         st.stop()
 
-    # 3) Clamp parcel dimensions so they never exceed locker bounds
-    df["width"]  = df["width"].clip(upper=locker_w)
-    df["depth"]  = df["depth"].clip(upper=locker_d)
+    # Clamp parcel dimensions so they never exceed locker bounds
+    df["width"] = df["width"].clip(upper=locker_w)
+    df["depth"] = df["depth"].clip(upper=locker_d)
     df["height"] = df["height"].clip(upper=locker_h)
+
+    # ---------- Stackability flag (demo rule) ----------
+    # Demo rule: a parcel is "stackable" if its height is at most 40% of the
+    # current locker height. This is purely illustrative and can later be
+    # replaced with ML or richer business rules.
+    df["stackable"] = df["height"] <= 0.4 * locker_h
 
     # ---------- Baseline Matplotlib scatter ----------
     st.subheader("Baseline 3D scatter (parcel centers)")
@@ -83,21 +91,55 @@ def case1_page():
     # ---------- Plotly 3D boxes ----------
     st.subheader("Plotly 3D boxes (parcels)")
     st.caption("Transparent boxes represent parcel volumes. This view helps spot wasted space or collisions.")
+    st.markdown(
+        "_Stackability rule (demo): parcels with height ≤ 40% of the current locker "
+        "height are treated as **stackable** and shown in **green**. Others are "
+        "shown in **red** as non-stackable._"
+    )
+
     show_boxes = st.checkbox("Show parcels as 3D boxes", value=True)
 
     if show_boxes:
         fig3d = go.Figure()
 
+        # For legend: only show one entry per class
+        stackable_legend_added = False
+        non_stackable_legend_added = False
+
         for _, r in df.iterrows():
             x0, y0, z0 = r["x"], r["y"], r["z"]
             w, d, h = r["width"], r["depth"], r["height"]
 
-            xs = [x0, x0+w, x0+w, x0, x0, x0+w, x0+w, x0]
-            ys = [y0, y0, y0+d, y0+d, y0, y0, y0+d, y0+d]
-            zs = [z0, z0, z0, z0, z0+h, z0+h, z0+h, z0+h]
+            xs = [x0, x0 + w, x0 + w, x0, x0, x0 + w, x0 + w, x0]
+            ys = [y0, y0, y0 + d, y0 + d, y0, y0, y0 + d, y0 + d]
+            zs = [z0, z0, z0, z0, z0 + h, z0 + h, z0 + h, z0 + h]
+
+            is_stackable = bool(r["stackable"])
+            color = "green" if is_stackable else "red"
+
+            if is_stackable and not stackable_legend_added:
+                name = "Stackable"
+                showlegend = True
+                stackable_legend_added = True
+            elif (not is_stackable) and not non_stackable_legend_added:
+                name = "Non-stackable"
+                showlegend = True
+                non_stackable_legend_added = True
+            else:
+                name = None
+                showlegend = False
 
             fig3d.add_trace(
-                go.Mesh3d(x=xs, y=ys, z=zs, opacity=0.4, alphahull=0)
+                go.Mesh3d(
+                    x=xs,
+                    y=ys,
+                    z=zs,
+                    opacity=0.4,
+                    alphahull=0,
+                    color=color,
+                    name=name,
+                    showlegend=showlegend,
+                )
             )
 
         fig3d.update_layout(
@@ -112,6 +154,7 @@ def case1_page():
         )
 
         st.plotly_chart(fig3d, use_container_width=True)
+
 
 
 def case2_page():
