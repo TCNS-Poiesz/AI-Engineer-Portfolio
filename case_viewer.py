@@ -72,9 +72,18 @@ def case1_page():
         st.stop()
 
     # Clamp parcel dimensions so they never exceed locker bounds
-    df["width"] = df["width"].clip(upper=locker_w)
-    df["depth"] = df["depth"].clip(upper=locker_d)
-    df["height"] = df["height"].clip(upper=locker_h)
+    # df["width"] = df["width"].clip(upper=locker_w)
+    # df["depth"] = df["depth"].clip(upper=locker_d)
+    # df["height"] = df["height"].clip(upper=locker_h)
+    # ---------- Fit / no-fit check (PHYSICAL SIZE ONLY - ABB relevant) ----------
+df["fits_size"] = (
+    (df["width"]  <= locker_w)
+    & (df["depth"] <= locker_d)
+    & (df["height"] <= locker_h)
+)
+
+oversize_df = df[~df["fits_size"]].copy()
+
     # ---------- Physical properties (demo, but data-aware) ----------
     # In real logistics data, weight and stackability normally come from
     # the carrier/shipper manifest. Here we:
