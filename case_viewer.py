@@ -12,6 +12,15 @@ page = st.sidebar.radio(
     "Choose AI Case",
     ["Case 1 – Space Optimization & UD", "Case 2 – UD Incident Embeddings"]
 )
+# ============================================================
+# AI Case Viewer — TODO (next session)
+# 1) Confirm columns AFTER rename include w/d/h
+# 2) Ensure rename happens BEFORE any r["w"]/r["d"]/r["h"] access
+# 3) Verify Plotly 3D boxes render (green + red)
+# 4) Remove debug prints (st.write columns)
+# 5) Optional: Add locker boundary wireframe / toggle
+# ============================================================
+
 def case1_page():
     st.title("AI Case 1 – Space Optimization & Unattended Delivery")
 
@@ -114,21 +123,56 @@ def case1_page():
     # Parcel ID: use provided ID if present, otherwise synthesize a simple one.
     if "parcel_id" not in df.columns:
         df["parcel_id"] = [f"PARCEL_{i:03d}" for i in range(len(df))]
+    # ---------- Fit / no-fit check (bounds only, demo) ----------
+    # We treat (x, y, z) as the origin corner of the parcel inside the locker.
+    # A parcel "fits" if its full box is within the locker dimensions.
+    df["fits_bounds"] = (
+        (df["x"] >= 0)
+        & (df["y"] >= 0)
+        & (df["z"] >= 0)
+        & (df["x"] + df["width"]  <= locker_w)
+        & (df["y"] + df["depth"]  <= locker_d)
+        & (df["z"] + df["height"] <= locker_h)
+    )
 
-    # ---------- Summary metrics ----------
+        # ---------- Summary metrics ----------
     st.subheader("Parcel physics summary (demo)")
     col1, col2, col3 = st.columns(3)
+
     with col1:
         st.metric("Parcels", len(df))
+
     with col2:
-        st.metric("Avg weight (kg)", f"{df['weight_kg'].mean():.2f}")
+        st.metric("Avg weight (kg)", f'{df["weight_kg"].mean():.2f}')
+
     with col3:
         st.metric(
             "Avg max top load (kg)",
-            f"{df['max_top_load_kg'].mean():.2f}"
+            f'{df["max_top_load_kg"].mean():.2f}'
         )
+
+
+    # ---------- Fit / no-fit summary ----------
+    total_parcels = len(df)
+    fit_count = int(df["fits_bounds"].sum())
+    not_fit_count = total_parcels - fit_count
+
+    st.subheader("Fit / no-fit summary (bounds only, demo)")
+    st.write(f"Parcels fully inside locker: **{fit_count} / {total_parcels}**")
+
+    if not_fit_count > 0:
+        st.error(
+            f"{not_fit_count} parcel(s) extend beyond the locker bounds "
+            "based on current dimensions and placeholder positions."
+        )
+    else:
+        st.success(
+            "All parcels are fully inside the locker bounds for this configuration."
+        )
+
     # ---------- Parcel data model preview ----------
     with st.expander("Show parcel data sample (schema v1.0)", expanded=False):
+
         cols_to_show = [
             "parcel_id",
             "width", "depth", "height",
@@ -155,9 +199,9 @@ def case1_page():
     ax.set_zlim(0, locker_h)
     st.pyplot(fig)
 
-    # ---------- Plotly 3D boxes ----------
+     # ---------- Plotly 3D boxes ----------
     st.subheader("Plotly 3D boxes (parcels)")
-    st.caption("Transparent boxes represent parcel volumes. This view helps spot wasted space or collisions.")
+    st.caption("Transparent boxes represent parcel volumes. This view helps spot wasted space.")
     st.markdown(
         "_Stackability rule (demo): parcels with height ≤ 40% of the current locker "
         "height are treated as **stackable** and shown in **green**. Others are "
@@ -165,45 +209,69 @@ def case1_page():
     )
 
     show_boxes = st.checkbox("Show parcels as 3D boxes", value=True)
+    show_only_fit = st.checkbox("Show only parcels that fit (bounds-only)", value=False)
 
     if show_boxes:
+        df_plot = df.copy()
+        # st.write(df_plot.columns.tolist())
+        # Normalize dimension column names (so plotting code can use w/d/h consistently)
+        rename_map = {}
+        if "w" not in df_plot.columns and "width" in df_plot.columns:
+            rename_map["width"] = "w"
+        if "d" not in df_plot.columns and "depth" in df_plot.columns:
+            rename_map["depth"] = "d"
+        if "h" not in df_plot.columns and "height" in df_plot.columns:
+            rename_map["height"] = "h"
+
+        if rename_map:
+            df_plot = df_plot.rename(columns=rename_map)
+        
+        # If user wants only parcels that fit, filter here
+        if show_only_fit and "fits_bounds" in df_plot.columns:
+            df_plot = df_plot[df_plot["fits_bounds"]]
+
+        # Normalize stackable flag
+        if "stackable_flag" in df_plot.columns and "stackable" not in df_plot.columns:
+            df_plot["stackable"] = df_plot["stackable_flag"]
+        elif "stackable" not in df_plot.columns:
+            df_plot["stackable"] = 0
+
+        df_plot["stackable"] = df_plot["stackable"].astype(int)
+
         fig3d = go.Figure()
 
-        # For legend: only show one entry per class
-        stackable_legend_added = False
-        non_stackable_legend_added = False
+        def cuboid_mesh(x, y, z, w, d, h):
+            vx = [x, x+w, x+w, x,   x, x+w, x+w, x]
+            vy = [y, y,   y+d, y+d, y, y,   y+d, y+d]
+            vz = [z, z,   z,   z,   z+h, z+h, z+h, z+h]
 
-        for _, r in df.iterrows():
-            x0, y0, z0 = r["x"], r["y"], r["z"]
-            w, d, h = r["width"], r["depth"], r["height"]
+            i = [0, 0, 0, 1, 1, 2, 4, 4, 4, 5, 5, 6]
+            j = [1, 2, 3, 2, 5, 3, 5, 6, 7, 6, 1, 7]
+            k = [2, 3, 1, 5, 6, 7, 6, 7, 5, 1, 4, 3]
+            return vx, vy, vz, i, j, k
 
-            xs = [x0, x0 + w, x0 + w, x0, x0, x0 + w, x0 + w, x0]
-            ys = [y0, y0, y0 + d, y0 + d, y0, y0, y0 + d, y0 + d]
-            zs = [z0, z0, z0, z0, z0 + h, z0 + h, z0 + h, z0 + h]
+        legend_shown = {"stackable": False, "non_stackable": False}
 
-            is_stackable = bool(r["stackable"])
+        for _, r in df_plot.iterrows():
+            is_stackable = r["stackable"] == 1
             color = "green" if is_stackable else "red"
 
-            if is_stackable and not stackable_legend_added:
-                name = "Stackable"
-                showlegend = True
-                stackable_legend_added = True
-            elif (not is_stackable) and not non_stackable_legend_added:
-                name = "Non-stackable"
-                showlegend = True
-                non_stackable_legend_added = True
-            else:
-                name = None
-                showlegend = False
+            key = "stackable" if is_stackable else "non_stackable"
+            name = "Stackable" if is_stackable else "Non-stackable"
+            showlegend = not legend_shown[key]
+            legend_shown[key] = True
+
+            vx, vy, vz, i, j, k = cuboid_mesh(
+                r["x"], r["y"], r["z"],
+                r["w"], r["d"], r["h"]
+            )
 
             fig3d.add_trace(
                 go.Mesh3d(
-                    x=xs,
-                    y=ys,
-                    z=zs,
-                    opacity=0.4,
-                    alphahull=0,
+                    x=vx, y=vy, z=vz,
+                    i=i, j=j, k=k,
                     color=color,
+                    opacity=0.55,
                     name=name,
                     showlegend=showlegend,
                 )
@@ -211,16 +279,19 @@ def case1_page():
 
         fig3d.update_layout(
             scene=dict(
-                xaxis=dict(range=[0, locker_w], title="x (W)"),
-                yaxis=dict(range=[0, locker_d], title="y (D)"),
-                zaxis=dict(range=[0, locker_h], title="z (H)"),
+                xaxis=dict(range=[0, locker_w], title="Width"),
+                yaxis=dict(range=[0, locker_d], title="Depth"),
+                zaxis=dict(range=[0, locker_h], title="Height"),
                 aspectmode="data",
             ),
-            height=650,
+            legend=dict(title="Parcel type"),
             margin=dict(l=0, r=0, t=30, b=0),
         )
 
         st.plotly_chart(fig3d, use_container_width=True)
+
+
+
 
 
 
