@@ -76,13 +76,13 @@ def case1_page():
     # df["depth"] = df["depth"].clip(upper=locker_d)
     # df["height"] = df["height"].clip(upper=locker_h)
     # ---------- Fit / no-fit check (PHYSICAL SIZE ONLY - ABB relevant) ----------
-df["fits_size"] = (
-    (df["width"]  <= locker_w)
-    & (df["depth"] <= locker_d)
-    & (df["height"] <= locker_h)
-)
+    df["fits_size"] = (
+        (df["width"]  <= locker_w)
+        & (df["depth"] <= locker_d)
+        & (df["height"] <= locker_h)
+    )
 
-oversize_df = df[~df["fits_size"]].copy()
+    oversize_df = df[~df["fits_size"]].copy()
 
     # ---------- Physical properties (demo, but data-aware) ----------
     # In real logistics data, weight and stackability normally come from
@@ -91,6 +91,7 @@ oversize_df = df[~df["fits_size"]].copy()
     # 2) Otherwise, derive demo values so the prototype remains usable.
 
     # Volume in cubic meters (always safe to compute).
+    
     df["volume_m3"] = df["width"] * df["depth"] * df["height"]
 
     if {"weight_kg", "max_top_load_kg"}.issubset(df.columns):
@@ -144,7 +145,7 @@ oversize_df = df[~df["fits_size"]].copy()
         & (df["z"] + df["height"] <= locker_h)
     )
 
-        # ---------- Summary metrics ----------
+            # ---------- Summary metrics ----------
     st.subheader("Parcel physics summary (demo)")
     col1, col2, col3 = st.columns(3)
 
@@ -208,7 +209,7 @@ oversize_df = df[~df["fits_size"]].copy()
     ax.set_zlim(0, locker_h)
     st.pyplot(fig)
 
-     # ---------- Plotly 3D boxes ----------
+        # ---------- Plotly 3D boxes ----------
     st.subheader("Plotly 3D boxes (parcels)")
     st.caption("Transparent boxes represent parcel volumes. This view helps spot wasted space.")
     st.markdown(
@@ -221,83 +222,108 @@ oversize_df = df[~df["fits_size"]].copy()
     show_only_fit = st.checkbox("Show only parcels that fit (bounds-only)", value=False)
 
     if show_boxes:
+        # Work on a plotting copy (so we never mutate the main df)
         df_plot = df.copy()
-        # st.write(df_plot.columns.tolist())
-        # Normalize dimension column names (so plotting code can use w/d/h consistently)
-        rename_map = {}
-        if "w" not in df_plot.columns and "width" in df_plot.columns:
-            rename_map["width"] = "w"
-        if "d" not in df_plot.columns and "depth" in df_plot.columns:
-            rename_map["depth"] = "d"
-        if "h" not in df_plot.columns and "height" in df_plot.columns:
-            rename_map["height"] = "h"
 
-        if rename_map:
-            df_plot = df_plot.rename(columns=rename_map)
-        
-        # If user wants only parcels that fit, filter here
+        # Optional: filter to only parcels that fit
         if show_only_fit and "fits_bounds" in df_plot.columns:
             df_plot = df_plot[df_plot["fits_bounds"]]
 
-        # Normalize stackable flag
-        if "stackable_flag" in df_plot.columns and "stackable" not in df_plot.columns:
-            df_plot["stackable"] = df_plot["stackable_flag"]
-        elif "stackable" not in df_plot.columns:
-            df_plot["stackable"] = 0
-
-        df_plot["stackable"] = df_plot["stackable"].astype(int)
-
         fig3d = go.Figure()
 
-        def cuboid_mesh(x, y, z, w, d, h):
-            vx = [x, x+w, x+w, x,   x, x+w, x+w, x]
-            vy = [y, y,   y+d, y+d, y, y,   y+d, y+d]
-            vz = [z, z,   z,   z,   z+h, z+h, z+h, z+h]
+        # Optional: draw the locker boundary (what "fit" means visually)
+        show_locker_bounds = st.checkbox("Show locker boundary (fit box)", value=True)
 
-            i = [0, 0, 0, 1, 1, 2, 4, 4, 4, 5, 5, 6]
-            j = [1, 2, 3, 2, 5, 3, 5, 6, 7, 6, 1, 7]
-            k = [2, 3, 1, 5, 6, 7, 6, 7, 5, 1, 4, 3]
-            return vx, vy, vz, i, j, k
+        if show_locker_bounds:
+            # Wireframe edges of the locker cuboid (use None to break line segments)
+            x = [
+                0, locker_w, locker_w, 0, 0, None,                 # bottom rectangle
+                0, locker_w, locker_w, 0, 0, None,                 # top rectangle
+                0, 0, None, locker_w, locker_w, None,              # vertical edges
+                locker_w, locker_w, None, 0, 0, None
+            ]
+            y = [
+                0, 0, locker_d, locker_d, 0, None,
+                0, 0, locker_d, locker_d, 0, None,
+                0, 0, None, 0, 0, None,
+                locker_d, locker_d, None, locker_d, locker_d, None
+            ]
+            z = [
+                0, 0, 0, 0, 0, None,
+                locker_h, locker_h, locker_h, locker_h, locker_h, None,
+                0, locker_h, None, 0, locker_h, None,
+                0, locker_h, None, 0, locker_h, None
+            ]
 
-        legend_shown = {"stackable": False, "non_stackable": False}
-
-        for _, r in df_plot.iterrows():
-            is_stackable = r["stackable"] == 1
-            color = "green" if is_stackable else "red"
-
-            key = "stackable" if is_stackable else "non_stackable"
-            name = "Stackable" if is_stackable else "Non-stackable"
-            showlegend = not legend_shown[key]
-            legend_shown[key] = True
-
-            vx, vy, vz, i, j, k = cuboid_mesh(
-                r["x"], r["y"], r["z"],
-                r["w"], r["d"], r["h"]
+            fig3d.add_trace(
+                go.Scatter3d(
+                    x=x, y=y, z=z,
+                    mode="lines",
+                    name="Locker bounds",
+                    showlegend=False,
+                    line=dict(width=6),
+                )
             )
+
+        # Always show BOTH legend entries (even if filtered view contains only one class)
+        fig3d.add_trace(
+            go.Scatter3d(
+                x=[None], y=[None], z=[None],
+                mode="markers",
+                marker=dict(size=8, color="green"),
+                name="Stackable",
+                showlegend=True,
+            )
+        )
+        fig3d.add_trace(
+            go.Scatter3d(
+                x=[None], y=[None], z=[None],
+                mode="markers",
+                marker=dict(size=8, color="red"),
+                name="Non-stackable",
+                showlegend=True,
+            )
+        )
+
+        # Parcels as translucent 3D boxes
+        for _, r in df_plot.iterrows():
+            x0, y0, z0 = r["x"], r["y"], r["z"]
+            w, d, h = r["width"], r["depth"], r["height"]
+
+            xs = [x0, x0 + w, x0 + w, x0, x0, x0 + w, x0 + w, x0]
+            ys = [y0, y0, y0 + d, y0 + d, y0, y0, y0 + d, y0 + d]
+            zs = [z0, z0, z0, z0, z0 + h, z0 + h, z0 + h, z0 + h]
+
+            # Be robust to column naming
+            is_stackable = bool(r.get("stackable_flag", r.get("stackable", False)))
+            color = "green" if is_stackable else "red"
 
             fig3d.add_trace(
                 go.Mesh3d(
-                    x=vx, y=vy, z=vz,
-                    i=i, j=j, k=k,
+                    x=xs,
+                    y=ys,
+                    z=zs,
+                    opacity=0.35,
+                    alphahull=0,
                     color=color,
-                    opacity=0.55,
-                    name=name,
-                    showlegend=showlegend,
+                    showlegend=False,  # legend handled by the dummy traces above
                 )
             )
 
         fig3d.update_layout(
             scene=dict(
-                xaxis=dict(range=[0, locker_w], title="Width"),
-                yaxis=dict(range=[0, locker_d], title="Depth"),
-                zaxis=dict(range=[0, locker_h], title="Height"),
+                xaxis=dict(range=[0, locker_w], title="x (W)"),
+                yaxis=dict(range=[0, locker_d], title="y (D)"),
+                zaxis=dict(range=[0, locker_h], title="z (H)"),
                 aspectmode="data",
             ),
-            legend=dict(title="Parcel type"),
+            height=650,
             margin=dict(l=0, r=0, t=30, b=0),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
         )
 
         st.plotly_chart(fig3d, use_container_width=True)
+
 
 
 
