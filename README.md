@@ -1,3 +1,10 @@
+# AI Case Viewer (TCNS Portfolio)
+## Quickstart
+
+```bash
+pip install -r requirements.txt
+streamlit run case_viewer.py
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
