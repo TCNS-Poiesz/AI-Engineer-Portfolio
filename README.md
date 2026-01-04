@@ -1,4 +1,9 @@
 # AI Case Viewer (TCNS Portfolio)
+## Quickstart
+
+```bash
+pip install -r requirements.txt
+streamlit run case_viewer.py
 
 # React + TypeScript + Vite
 
