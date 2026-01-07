@@ -1,4 +1,8 @@
 # AI Case Viewer (TCNS Portfolio)
+## Docs (Option B – technical)
+
+- Technical notes: [Docs/TECHNICAL_NOTES.md](Docs/TECHNICAL_NOTES.md)
+- Parcel schema: [Docs/PARCEL_SCHEMA.md](Docs/PARCEL_SCHEMA.md)
 
 This repository contains a small, hands-on AI engineering portfolio focused on
 **constraint-based reasoning, decision support, and digital twin concepts**
