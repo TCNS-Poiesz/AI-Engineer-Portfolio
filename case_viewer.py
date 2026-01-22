@@ -20,6 +20,14 @@ page = st.sidebar.radio(
 # 4) Remove debug prints (st.write columns)
 # 5) Optional: Add locker boundary wireframe / toggle
 # ============================================================
+# ============================================================
+# Case 1 Page
+# Sections:
+#   1) Markdown / narrative (renders the case description)
+#   2) Data loading (parcel + space inputs)
+#   3) Fit evaluation (currently bounds-only; future: scoring/optimization)
+#   4) Visualization + UI controls (3D plot, filters, tables)
+# ============================================================
 
 def case1_page():
     st.title("AI Case 1 – Space Optimization & Unattended Delivery")
@@ -33,7 +41,22 @@ def case1_page():
         st.stop()
 
     # --- Load parcels CSV ---
-    data_path = Path("ai_cases/data/parcels_sample.csv")
+    # --- Load parcels CSV ---
+    # --- DATA LOADING (parcels + spaces) ---
+    # HOOK (Kenneth): swap input datasets here (dropdown -> file path) and reload case
+    # Select parcel dataset
+    available_datasets = {
+    "Sample parcels": "ai_cases/data/parcels_sample.csv",
+    }
+
+    selected_dataset_label = st.sidebar.selectbox(
+    "Select parcel dataset",
+    options=list(available_datasets.keys())
+    )
+
+    data_path = Path(available_datasets[selected_dataset_label])
+
+
     if not data_path.exists():
         st.error(f"Missing data file: {data_path}")
         st.stop()
