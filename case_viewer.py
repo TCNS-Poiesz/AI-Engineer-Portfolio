@@ -44,24 +44,38 @@ def case1_page():
     # --- Load parcels CSV ---
     # --- DATA LOADING (parcels + spaces) ---
     # HOOK (Kenneth): swap input datasets here (dropdown -> file path) and reload case
-    # Select parcel dataset
-    available_datasets = {
-    "Sample parcels": "ai_cases/data/parcels_sample.csv",
-    }
 
-    selected_dataset_label = st.sidebar.selectbox(
-    "Select parcel dataset",
-    options=list(available_datasets.keys())
+    # ---- DATA LOADING (parcels + spaces) ---
+    DATA_DIR = Path(__file__).resolve().parent / "ai_cases" / "data"
+
+    # Find all parcel datasets you generated (plus sample)
+    parcel_files = sorted(DATA_DIR.glob("parcels_*.csv"))
+
+    # Build dropdown labels -> file paths
+    available_datasets = {}
+    for p in parcel_files:
+        # Nice label e.g. "parcels_route_A_summer" -> "Route A summer"
+        label = p.stem.replace("parcels_", "").replace("_", " ").strip().title()
+        available_datasets[label] = p
+
+    if not available_datasets:
+        st.error(f"No parcel datasets found in {DATA_DIR}")
+        st.stop()
+
+    selected_label = st.sidebar.selectbox(
+        "Select parcel dataset",
+        options=list(available_datasets.keys()),
+        index=0
     )
 
-    data_path = Path(available_datasets[selected_dataset_label])
-
+    data_path = available_datasets[selected_label]
 
     if not data_path.exists():
         st.error(f"Missing data file: {data_path}")
         st.stop()
 
     df = pd.read_csv(data_path)
+
 
     # ---------- Locker size sliders FIRST ----------
     st.sidebar.header("Locker Dimensions (meters)")
