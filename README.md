@@ -13,6 +13,30 @@ real operational constraints can be translated into data models, simulations,
 and explainable visual outcomes.
 
 ---
+
+## Feature engineering + modeling pipeline (Python)
+
+This repo now includes a reproducible feature-engineering and modeling pipeline.
+
+### What’s included
+- Notebook: `notebooks/02_feature_engineering.ipynb` (sanity checks + feature build)
+- Core modules: `src/` (data I/O, feature creation, labeling, modeling, evaluation)
+- Environment snapshot: `requirements.txt`
+
+### Quick start (local)
+1. Create/activate a virtual environment
+2. Install dependencies:
+   - `pip install -r requirements.txt`
+3. Run the notebook:
+   - `notebooks/02_feature_engineering.ipynb`
+
+### Output
+- A feature matrix **X**
+- A binary target label (e.g., `delivery_failed`)
+- A baseline model + evaluation metrics
+---
+
+---
 ## 📘 WAW — Walk Around the Work (Read-only)
 
 > **Audience:** Marcel (ABB), systems & architecture review  
