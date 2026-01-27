@@ -47,6 +47,36 @@ def case1_page():
 
     # ---- DATA LOADING (parcels + spaces) ---
     DATA_DIR = Path(__file__).resolve().parent / "ai_cases" / "data"
+    # ----------------------------
+    # Load datasets for dropdowns
+    # ----------------------------
+
+    @st.cache_data
+    def load_csv(filename: str) -> pd.DataFrame:
+        return pd.read_csv(DATA_DIR / filename)
+
+    # --- Parcel dataset dropdown (auto-detect) ---
+    parcel_files = sorted([p.name for p in DATA_DIR.glob("parcels_*.csv")])
+    selected_parcels_file = st.sidebar.selectbox("Select parcel dataset", parcel_files, index=0)
+    parcels_df = load_csv(selected_parcels_file)
+
+    # --- Truck dropdown (from trucks.csv) ---
+    trucks_df = load_csv("trucks.csv")
+    truck_ids = trucks_df["truck_id"].tolist()
+    selected_truck_id = st.sidebar.selectbox("Select truck type", truck_ids, index=0)
+
+    truck_row = trucks_df.loc[trucks_df["truck_id"] == selected_truck_id].iloc[0]
+    truck_dims = {
+        "width_m": float(truck_row["inner_width_m"]),
+        "depth_m": float(truck_row["inner_depth_m"]),
+        "height_m": float(truck_row["inner_height_m"]),
+        "max_payload_kg": float(truck_row["max_payload_kg"]),
+    }
+
+    # --- Rollcontainer set dropdown (start with A only) ---
+    rollcontainer_files = ["rollcontainers_set_A.csv"]
+    selected_rc_file = st.sidebar.selectbox("Select rollcontainer set", rollcontainer_files, index=0)
+    rc_df = load_csv(selected_rc_file)
 
     # Find all parcel datasets you generated (plus sample)
     parcel_files = sorted(DATA_DIR.glob("parcels_*.csv"))
