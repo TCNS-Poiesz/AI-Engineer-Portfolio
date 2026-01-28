@@ -19,7 +19,8 @@ and explainable visual outcomes.
 This repo includes a reproducible feature-engineering and modeling pipeline.
 
 ### What's included
-- Notebook: `notebooks/02_feature_engineering.ipynb` (sanity checks + feature build)
+- Notebook: [`notebooks/02_feature_engineering.ipynb`](notebooks/02_feature_engineering.ipynb) (sanity checks + feature build)
+
 - Core modules: `src/` (data I/O, feature creation, labeling, modeling, evaluation)
 - Environment snapshot: `requirements.txt`
 
