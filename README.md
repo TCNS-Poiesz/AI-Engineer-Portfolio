@@ -16,6 +16,30 @@ and explainable visual outcomes.
 
 ## Feature engineering + modeling pipeline (Python)
 
+This repo includes a reproducible feature-engineering and modeling pipeline.
+
+### What's included
+- Notebook: `notebooks/02_feature_engineering.ipynb` (sanity checks + feature build)
+- Core modules: `src/` (data I/O, feature creation, labeling, modeling, evaluation)
+- Environment snapshot: `requirements.txt`
+
+### Pipeline overview
+![Feature engineering pipeline](Docs/images/<YOUR_IMAGE_NAME>.png)
+
+### Results (current)
+- Builds a feature matrix `X`
+- Builds a binary target label `y` (e.g., `delivery_failed`)
+- Trains a baseline model
+- Produces evaluation metrics (accuracy/precision/recall/F1)
+
+### Next improvements
+- Add cross-validation + hyperparameter tuning
+- Add SHAP / feature importance explanation
+- Add data validation tests (schema checks)
+- Add a reproducible CLI entrypoint
+
+### Details / Notes
+
 This repo now includes a reproducible feature-engineering and modeling pipeline.
 
 ### What’s included
