@@ -1,6 +1,13 @@
 # AI Engineer Portfolio (TCNS)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![Status](https://img.shields.io/badge/Status-Active-success)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 This repository contains hands-on AI engineering case studies focused on **last-mile logistics** and **unattended delivery**.
+## Quick navigation
+- Start here: [Start here](#start-here)
+- Feature engineering pipeline: [Feature engineering + modeling pipeline (Python)](#feature-engineering--modeling-pipeline-python)
+- Quick start: [Quick start (local)](#quick-start-local)
 
 ## What you can explore
 - **AI Case Viewer (Web UI)**: interactive viewer to browse case studies
