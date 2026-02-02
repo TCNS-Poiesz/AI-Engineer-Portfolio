@@ -50,6 +50,10 @@ and explainable visual outcomes.
 ## Feature engineering + modeling pipeline (Python)
 
 This repo includes a reproducible feature-engineering and modeling pipeline.
+## Start here
+- **Read the case study**: `ai_cases/case1_space_optimization_unattended_delivery.md`
+- **Run the notebook**: [`02_feature_engineering.ipynb`](./notebooks/02_feature_engineering.ipynb)
+- **Core pipeline code**: [`src/`](./src/)
 
 ### What's included
 - Notebook: [02_feature_engineering.ipynb](./notebooks/02_feature_engineering.ipynb) (sanity checks + feature build)
