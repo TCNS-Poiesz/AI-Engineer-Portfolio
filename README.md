@@ -1,3 +1,36 @@
+# AI Engineer Portfolio (TCNS)
+
+This repository contains hands-on AI engineering case studies focused on **last-mile logistics** and **unattended delivery**.
+
+## What you can explore
+- **AI Case Viewer (Web UI)**: interactive viewer to browse case studies
+- **Case studies (Markdown)**: end-to-end problem framing + assumptions + results
+- **Notebooks (Python)**: feature engineering + modeling pipeline
+- **Synthetic datasets**: reproducible data generation for experimentation
+
+## Featured case studies
+1) **Space Optimization + Unattended Delivery**
+   - Constraint-driven parcel placement logic
+   - Operational assumptions mapped to features
+   - Visual exploration of results
+
+2) **Unattended Delivery Embeddings Analyzer**
+   - Text/metadata embeddings exploration
+   - Similarity-based grouping and explainability direction
+
+## Tech stack
+- Python (pandas, numpy, scikit-learn)
+- Jupyter notebooks
+- Lightweight web viewer (HTML / JS)
+- GitHub-first documentation
+
+## Why this matters
+These case studies demonstrate how real operational logistics constraints can be translated into:
+- reproducible datasets
+- feature engineering pipelines
+- baseline predictive models
+- explainable visual outcomes
+
 # AI Case Viewer (TCNS Portfolio)
 ## Docs (Option B – technical)
 
