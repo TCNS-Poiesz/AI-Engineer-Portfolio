@@ -102,10 +102,17 @@ This repo now includes a reproducible feature-engineering and modeling pipeline.
    - Target label `y` (e.g. `delivery_failed`)
    - Baseline metrics (accuracy/precision/recall/F1)
 
-### Output
-- A feature matrix **X**
-- A binary target label (e.g., `delivery_failed`)
-- A baseline model + evaluation metrics
+### Example output
+```text
+Feature matrix X: (n_samples, n_features)
+Target label y: delivery_failed (binary)
+Baseline model: Logistic Regression
+Metrics:
+- Accuracy: …
+- Precision: …
+- Recall: …
+- F1-score: …
+
 ---
 
 ---
