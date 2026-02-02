@@ -93,6 +93,14 @@ This repo now includes a reproducible feature-engineering and modeling pipeline.
    - `pip install -r requirements.txt`
 3. Run the notebook:
    - `notebooks/02_feature_engineering.ipynb`
+4. (Optional) Run the case viewer (web UI):
+   - `npm install`
+   - `npm run dev`
+
+5. Expected outputs (sanity):
+   - Feature matrix `X`
+   - Target label `y` (e.g. `delivery_failed`)
+   - Baseline metrics (accuracy/precision/recall/F1)
 
 ### Output
 - A feature matrix **X**
