@@ -14,6 +14,24 @@ This repository contains hands-on AI engineering case studies focused on **last-
 - **Case studies (Markdown)**: end-to-end problem framing + assumptions + results
 - **Notebooks (Python)**: feature engineering + modeling pipeline
 - **Synthetic datasets**: reproducible data generation for experimentation
+## Quick start (local)
+
+### Option 1 — Python pipeline (recommended)
+1. Create & activate a virtual environment
+   - Windows (PowerShell):
+     ```powershell
+     python -m venv .venv
+     .\.venv\Scripts\Activate.ps1
+     ```
+   - macOS / Linux:
+     ```bash
+     python3 -m venv .venv
+     source .venv/bin/activate
+     ```
+
+2. Install dependencies
+   ```bash
+   pip install -r requirements.txt
 
 ## Featured case studies
 1) **Space Optimization + Unattended Delivery**
@@ -124,6 +142,23 @@ Metrics:
 
 ---
 ## 📘 WAW — Walk Around the Work (Read-only)
+This section is a **read-only walkthrough** of the portfolio deliverables — designed for stakeholders who want to quickly understand the work without running code.
+
+### What you will see
+- **Business problem framing** (last-mile logistics + unattended delivery)
+- **Data design** (synthetic dataset schema + assumptions)
+- **Feature engineering + label construction**
+- **Baseline model + evaluation metrics**
+- **Explainability-ready structure** (future SHAP / feature importance)
+- **Screenshots / UI outputs** from the interactive Case Viewer
+
+### Why it matters
+This portfolio demonstrates how I translate a real logistics problem into a reproducible AI pipeline with clear outputs and explainable structure — aligned with enterprise requirements (traceability, reproducibility, stakeholder clarity).
+### Walkthrough pages
+- 📄 **Case study (Markdown):** `ai_cases/case1_space_optimization_unattended_delivery.md`
+- 🧪 **Notebook (Preview):** `notebooks/02_feature_engineering.ipynb`
+- 🧩 **Pipeline code:** `src/`
+- 🖥️ **Case Viewer (Web UI):** `index.html`
 
 > **Audience:** Marcel (ABB), systems & architecture review  
 > **Mode:** WAW (Walk Around the Work) — *no code execution required*  
