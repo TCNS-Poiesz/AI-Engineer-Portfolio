@@ -54,6 +54,14 @@ def main() -> int:
 
     try:
         df = pd.read_csv(csv_path)
+        expected_cols = {"parcel_id", "width", "depth", "height", "stackable"}
+        missing = expected_cols - set(df.columns)
+        if missing:
+            print("ERROR: Dataset missing expected columns:")
+            print(f"Missing: {sorted(missing)}")
+            print(f"Found:   {df.columns.tolist()}")
+            return 6
+
     except Exception as e:
         print("ERROR: Failed to read CSV with pandas.")
         print(f"Reason: {e}")
