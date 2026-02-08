@@ -1,0 +1,74 @@
+{
+  "datasets": [
+    {
+      "id": "parcels_route_A_summer",
+      "file": "parcels_route_A_summer.csv",
+      "domain": "last_mile",
+      "segment": "route_A",
+      "season": "summer",
+      "location_type": "mixed",
+      "user_type": "ops",
+      "description": "Parcels on Route A (summer scenario)"
+    },
+    {
+      "id": "parcels_route_A_winter",
+      "file": "parcels_route_A_winter.csv",
+      "domain": "last_mile",
+      "segment": "route_A",
+      "season": "winter",
+      "location_type": "mixed",
+      "user_type": "ops",
+      "description": "Parcels on Route A (winter scenario)"
+    },
+    {
+      "id": "parcels_route_B_peak",
+      "file": "parcels_route_B_peak.csv",
+      "domain": "last_mile",
+      "segment": "route_B",
+      "season": "peak",
+      "location_type": "mixed",
+      "user_type": "ops",
+      "description": "Parcels on Route B (peak scenario)"
+    },
+    {
+      "id": "parcels_sample",
+      "file": "parcels_sample.csv",
+      "domain": "last_mile",
+      "segment": "sample",
+      "season": "none",
+      "location_type": "mixed",
+      "user_type": "demo",
+      "description": "Small parcels dataset for quick sanity checks"
+    },
+    {
+      "id": "rollcontainers_set_A",
+      "file": "rollcontainers_set_A.csv",
+      "domain": "last_mile",
+      "segment": "assets",
+      "season": "none",
+      "location_type": "hubs",
+      "user_type": "ops",
+      "description": "Rollcontainer inventory (set A)"
+    },
+    {
+      "id": "trucks",
+      "file": "trucks.csv",
+      "domain": "last_mile",
+      "segment": "assets",
+      "season": "none",
+      "location_type": "mixed",
+      "user_type": "ops",
+      "description": "Truck capacity and configuration dataset"
+    },
+    {
+      "id": "ud_incidents_synth",
+      "file": "ud_incidents_synth.csv",
+      "domain": "unattended_delivery",
+      "segment": "incidents",
+      "season": "none",
+      "location_type": "mixed",
+      "user_type": "ops",
+      "description": "Synthetic incidents dataset for unattended delivery"
+    }
+  ]
+}
