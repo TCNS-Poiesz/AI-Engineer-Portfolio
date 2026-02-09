@@ -116,13 +116,16 @@ This repo now includes a reproducible feature-engineering and modeling pipeline.
 1. Create/activate a virtual environment
 2. Install dependencies:
    - `pip install -r requirements.txt`
-3. Run the notebook:
+3. Sanity check (recommended):
+   - `python -m src.sanity_check`
+   - (Windows fallback) `py -m src.sanity_check`
+4. Run the notebook:
    - `notebooks/02_feature_engineering.ipynb`
-4. (Optional) Run the case viewer (web UI):
+5. (Optional) Run the case viewer (web UI):
    - `npm install`
    - `npm run dev`
 
-5. Expected outputs (sanity):
+6. Expected outputs (sanity):
    - Feature matrix `X`
    - Target label `y` (e.g. `delivery_failed`)
    - Baseline metrics (accuracy/precision/recall/F1)
