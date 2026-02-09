@@ -5,6 +5,26 @@ from pathlib import Path
 import argparse
 import json
 
+def apply_schema(df, schema: dict):
+    """
+    Apply dataset-specific schema mappings:
+    - rename columns (e.g., length_mm -> depth)
+    - scale normalized columns (e.g., mm -> m via 0.001)
+    """
+    if not schema:
+        return df
+
+    rename_map = schema.get("rename", {}) or {}
+    scale_map = schema.get("scale", {}) or {}
+
+    if rename_map:
+        df = df.rename(columns=rename_map)
+
+    for col, factor in scale_map.items():
+        if col in df.columns:
+            df[col] = df[col].astype(float) * float(factor)
+
+    return df
 
 def find_repo_root(start: Path) -> Path:
     current = start.resolve()
@@ -95,6 +115,7 @@ def main() -> int:
 
     try:
         df = pd.read_csv(csv_path)
+        df = apply_schema(df, chosen.get("schema", {}))
         expected_cols = {"parcel_id", "width", "depth", "height", "stackable"}
         missing = expected_cols - set(df.columns)
         if missing:

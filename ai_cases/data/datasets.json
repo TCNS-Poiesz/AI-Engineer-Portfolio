@@ -8,7 +8,12 @@
       "season": "summer",
       "location_type": "mixed",
       "user_type": "ops",
-      "description": "Parcels on Route A (summer scenario)"
+      "description": "Parcels on Route A (summer scenario)",
+      "schema": {
+        "rename": {},
+        "scale": {},
+        "notes": "No mapping defined yet."
+      }
     },
     {
       "id": "parcels_route_A_winter",
@@ -38,7 +43,20 @@
       "season": "none",
       "location_type": "mixed",
       "user_type": "demo",
-      "description": "Small parcels dataset for quick sanity checks"
+      "description": "Small parcels dataset for quick sanity checks",
+      "schema": {
+        "rename": {
+          "length_mm": "depth",
+          "width_mm": "width",
+          "height_mm": "height"
+        },
+        "scale": {
+          "depth": 0.001,
+          "width": 0.001,
+          "height": 0.001
+        },
+        "notes": "Normalize mm columns to meters expected by sanity_check (depth/width/height)."
+      }
     },
     {
       "id": "rollcontainers_set_A",
