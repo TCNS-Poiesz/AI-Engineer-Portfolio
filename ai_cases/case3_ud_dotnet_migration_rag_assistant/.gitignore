@@ -1,0 +1,5 @@
+# Case 3 local/cache files
+__pycache__/
+*.pyc
+.env
+*.zip

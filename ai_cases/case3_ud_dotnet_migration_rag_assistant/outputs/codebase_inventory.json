@@ -1,0 +1,234 @@
+[
+  {
+    "file_name": "AccessRight.cs",
+    "relative_path": "Domain\\AccessRight.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 105,
+    "character_count": 2851
+  },
+  {
+    "file_name": "AccessRightStatus.cs",
+    "relative_path": "Domain\\AccessRightStatus.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 10,
+    "character_count": 121
+  },
+  {
+    "file_name": "AccessRightType.cs",
+    "relative_path": "Domain\\AccessRightType.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 10,
+    "character_count": 187
+  },
+  {
+    "file_name": "Alert.cs",
+    "relative_path": "Domain\\Alert.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 38,
+    "character_count": 1112
+  },
+  {
+    "file_name": "AlertType.cs",
+    "relative_path": "Domain\\AlertType.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 13,
+    "character_count": 237
+  },
+  {
+    "file_name": "AssignmentStatus.cs",
+    "relative_path": "Domain\\AssignmentStatus.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 11,
+    "character_count": 145
+  },
+  {
+    "file_name": "CancellationReason.cs",
+    "relative_path": "Domain\\CancellationReason.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 15,
+    "character_count": 325
+  },
+  {
+    "file_name": "Delivery.cs",
+    "relative_path": "Domain\\Delivery.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 99,
+    "character_count": 3093
+  },
+  {
+    "file_name": "DeliveryAssignment.cs",
+    "relative_path": "Domain\\DeliveryAssignment.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 51,
+    "character_count": 1466
+  },
+  {
+    "file_name": "DeliverySpace.cs",
+    "relative_path": "Domain\\DeliverySpace.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 40,
+    "character_count": 1117
+  },
+  {
+    "file_name": "DeliveryStatus.cs",
+    "relative_path": "Domain\\DeliveryStatus.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 21,
+    "character_count": 491
+  },
+  {
+    "file_name": "FailureReason.cs",
+    "relative_path": "Domain\\FailureReason.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 15,
+    "character_count": 279
+  },
+  {
+    "file_name": "Organisation.cs",
+    "relative_path": "Domain\\Organisation.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 25,
+    "character_count": 705
+  },
+  {
+    "file_name": "OrganisationType.cs",
+    "relative_path": "Domain\\OrganisationType.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 10,
+    "character_count": 159
+  },
+  {
+    "file_name": "SmartBox.cs",
+    "relative_path": "Domain\\SmartBox.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 48,
+    "character_count": 1317
+  },
+  {
+    "file_name": "SmartBoxStatus.cs",
+    "relative_path": "Domain\\SmartBoxStatus.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 9,
+    "character_count": 118
+  },
+  {
+    "file_name": "SmartLock.cs",
+    "relative_path": "Domain\\SmartLock.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 48,
+    "character_count": 1234
+  },
+  {
+    "file_name": "SmartLockStatus.cs",
+    "relative_path": "Domain\\SmartLockStatus.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 9,
+    "character_count": 108
+  },
+  {
+    "file_name": "SpaceType.cs",
+    "relative_path": "Domain\\SpaceType.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 9,
+    "character_count": 136
+  },
+  {
+    "file_name": "User.cs",
+    "relative_path": "Domain\\User.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 34,
+    "character_count": 913
+  },
+  {
+    "file_name": "UserRole.cs",
+    "relative_path": "Domain\\UserRole.cs",
+    "layer": "Domain",
+    "extension": ".cs",
+    "line_count": 12,
+    "character_count": 161
+  },
+  {
+    "file_name": "LockProviderGateway.cs",
+    "relative_path": "Infrastructure\\LockProviderGateway.cs",
+    "layer": "Infrastructure",
+    "extension": ".cs",
+    "line_count": 9,
+    "character_count": 230
+  },
+  {
+    "file_name": "NotificationGateway.cs",
+    "relative_path": "Infrastructure\\NotificationGateway.cs",
+    "layer": "Infrastructure",
+    "extension": ".cs",
+    "line_count": 11,
+    "character_count": 280
+  },
+  {
+    "file_name": "RepositoryInterfaces.cs",
+    "relative_path": "Infrastructure\\RepositoryInterfaces.cs",
+    "layer": "Infrastructure",
+    "extension": ".cs",
+    "line_count": 29,
+    "character_count": 708
+  },
+  {
+    "file_name": "AccessControlService.cs",
+    "relative_path": "Services\\AccessControlService.cs",
+    "layer": "Services",
+    "extension": ".cs",
+    "line_count": 42,
+    "character_count": 1199
+  },
+  {
+    "file_name": "AlertService.cs",
+    "relative_path": "Services\\AlertService.cs",
+    "layer": "Services",
+    "extension": ".cs",
+    "line_count": 47,
+    "character_count": 1495
+  },
+  {
+    "file_name": "DeliveryAssignmentService.cs",
+    "relative_path": "Services\\DeliveryAssignmentService.cs",
+    "layer": "Services",
+    "extension": ".cs",
+    "line_count": 72,
+    "character_count": 2510
+  },
+  {
+    "file_name": "DeliveryStatusService.cs",
+    "relative_path": "Services\\DeliveryStatusService.cs",
+    "layer": "Services",
+    "extension": ".cs",
+    "line_count": 61,
+    "character_count": 1727
+  },
+  {
+    "file_name": "SpaceMatchingService.cs",
+    "relative_path": "Services\\SpaceMatchingService.cs",
+    "layer": "Services",
+    "extension": ".cs",
+    "line_count": 31,
+    "character_count": 877
+  }
+]
